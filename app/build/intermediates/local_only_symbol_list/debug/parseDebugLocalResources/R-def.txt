@@ -1,0 +1,28 @@
+R_DEF: Internal format may change without notice
+local
+color black
+color purple_200
+color purple_500
+color purple_700
+color teal_200
+color teal_700
+color white
+drawable ic_launcher_background
+drawable ic_launcher_foreground
+drawable sentiment_neutral_24px
+drawable sentiment_sad_24px
+drawable sentiment_satisfied_24px
+drawable weight_24px
+font ibm_plex_sans_bold
+font ibm_plex_sans_extralight
+font ibm_plex_sans_light
+font ibm_plex_sans_medium
+font ibm_plex_sans_regular
+font ibm_plex_sans_semibold
+font ibm_plex_sans_thin
+mipmap ic_launcher
+mipmap ic_launcher_round
+string app_name
+style Theme.CalculadoraIMC
+xml backup_rules
+xml data_extraction_rules
