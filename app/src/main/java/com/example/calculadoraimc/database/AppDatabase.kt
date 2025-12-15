@@ -5,8 +5,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-// 1. MUDAMOS A VERSÃO DE 1 PARA 2
-@Database(entities = [IMCResultEntity::class], version = 2, exportSchema = false)
+// VERSÃO 3
+@Database(entities = [IMCResultEntity::class], version = 3, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun imcDao(): IMCDao
@@ -22,8 +22,6 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "imc_database"
                 )
-                    // 2. ADICIONAMOS ESTA LINHA MÁGICA
-                    // Ela permite que o banco seja recriado se a estrutura mudar
                     .fallbackToDestructiveMigration()
                     .build()
                     .also { Instance = it }

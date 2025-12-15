@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.calculadoraimc.app-mergeDebugResources-50:/values-v30/values-v30.xml",
+            "outputFile": "com.example.calculadoraimc.app-mergeDebugResources-56:/values-v30/values-v30.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Luis Felipe\\.gradle\\caches\\8.13\\transforms\\ee48c750903ff6782a0ce5a0d4e23b7d\\transformed\\material3-release\\res\\values-v30\\values-v30.xml",

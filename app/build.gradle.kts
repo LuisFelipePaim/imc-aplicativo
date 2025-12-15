@@ -52,6 +52,9 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation("com.patrykandpatrick.vico:compose:1.14.0")
+    implementation("com.patrykandpatrick.vico:compose-m3:1.14.0")
+    implementation("com.patrykandpatrick.vico:core:1.14.0")
     // Agora o erro deve sumir pois o plugin foi ativado no topo:
     ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit)

@@ -1,6 +1,5 @@
 package com.example.calculadoraimc.feature.history
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,6 +14,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.calculadoraimc.database.IMCResultEntity
+// IMPORTS DO NOVO TEMA
+import com.example.calculadoraimc.ui.theme.HealthPrimary
+import com.example.calculadoraimc.ui.theme.HealthSecondary
 
 @Composable
 fun HistoryScreen(
@@ -32,6 +34,12 @@ fun HistoryScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            // GRÁFICO NO TOPO
+            item {
+                HistoryChart(historyData = historyList)
+            }
+
+            // LISTA DE ITENS
             items(historyList) { item ->
                 HistoryItemCard(item, onClick = { selectedItem = item })
             }
@@ -71,7 +79,8 @@ fun HistoryItemCard(item: IMCResultEntity, onClick: () -> Unit) {
                 Text(
                     text = "IMC: ${String.format("%.2f", item.imc)}",
                     fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp
+                    fontSize = 18.sp,
+                    color = HealthPrimary // Usando a cor do tema
                 )
                 Text(text = item.classification, fontSize = 14.sp)
             }
@@ -89,7 +98,7 @@ fun HistoryItemCard(item: IMCResultEntity, onClick: () -> Unit) {
 fun DetailDialog(item: IMCResultEntity, onClose: () -> Unit, onDelete: () -> Unit) {
     AlertDialog(
         onDismissRequest = onClose,
-        title = { Text(text = "Detalhes da Medição") },
+        title = { Text(text = "Detalhes da Medição", color = HealthSecondary) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 DetailRow("Data", item.getFormattedDate())
@@ -101,31 +110,27 @@ fun DetailDialog(item: IMCResultEntity, onClose: () -> Unit, onDelete: () -> Uni
 
                 if (item.idealWeightMin > 0) {
                     HorizontalDivider()
-                    Text("Estimativas:", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                    Text("Estimativas:", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = HealthPrimary)
                     DetailRow("Peso Ideal Min", "${String.format("%.1f", item.idealWeightMin)} kg")
                     DetailRow("Peso Ideal Max", "${String.format("%.1f", item.idealWeightMax)} kg")
                 }
 
-                // Exibe TMB e TDEE se existirem (registros novos)
                 if (item.tmb > 0) {
                     HorizontalDivider()
-                    Text("Energia:", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                    Text("Energia & Corpo:", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = HealthPrimary)
                     DetailRow("TMB (Basal)", "${String.format("%.0f", item.tmb)} kcal")
 
                     if (item.tdee > 0) {
-                        DetailRow("Necessidade Diária", "${String.format("%.0f", item.tdee)} kcal")
+                        DetailRow("Nec. Diária", "${String.format("%.0f", item.tdee)} kcal")
+                    }
+                    if (item.bodyFat > 0) {
+                        DetailRow("Gordura", "${String.format("%.1f", item.bodyFat)}%")
                     }
                 }
             }
         },
-        confirmButton = {
-            TextButton(onClick = onClose) { Text("Fechar") }
-        },
-        dismissButton = {
-            TextButton(onClick = onDelete) {
-                Text("Excluir", color = Color.Red)
-            }
-        }
+        confirmButton = { TextButton(onClick = onClose) { Text("Fechar") } },
+        dismissButton = { TextButton(onClick = onDelete) { Text("Excluir", color = Color.Red) } }
     )
 }
 

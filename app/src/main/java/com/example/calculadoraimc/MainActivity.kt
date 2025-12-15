@@ -22,13 +22,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 1. Inicializa o Banco de Dados
+        // Inicializa o Banco de Dados
         val db = AppDatabase.getDatabase(this)
         val dao = db.imcDao()
 
         setContent {
             CalculadoraIMCTheme {
-                // Passamos o DAO para a tela principal gerenciar os dados
                 MainScreen(dao)
             }
         }
@@ -37,14 +36,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen(dao: com.example.calculadoraimc.database.IMCDao) {
-    // Controla qual aba está visível: 0 = Home, 1 = Histórico
+    // Controla as abas (0 = Home, 1 = Histórico)
     var currentTab by remember { mutableIntStateOf(0) }
 
-    // Lê os dados do banco em tempo real (Flow -> State)
-    // Essa lista é usada tanto para exibir no Histórico quanto para Exportar CSV na Home
+    // Lista observável do banco de dados
     val historyList by dao.getAllHistory().collectAsState(initial = emptyList())
 
-    // Escopo para operações de banco em background (IO)
     val scope = rememberCoroutineScope()
 
     Scaffold(
@@ -65,40 +62,31 @@ fun MainScreen(dao: com.example.calculadoraimc.database.IMCDao) {
             }
         }
     ) { paddingValues ->
-        // Surface garante o fundo correto e aplica o padding da barra inferior
         Surface(modifier = Modifier.padding(paddingValues)) {
 
             if (currentTab == 0) {
                 // --- TELA HOME ---
                 Home(
-                    // Passamos a lista para que o botão de "Download" possa gerar o CSV
                     historyListForExport = historyList,
-
-                    // Callback executado quando o usuário clica em "Calcular"
-                    onCalculate = { result, weight, height, tmbCalculada, tdeeCalculada ->
+                    onCalculate = { result, weight, height, tmbCalculada, tdeeCalculada, fatCalculada ->
                         scope.launch(Dispatchers.IO) {
 
-                            // Lógica adicional: Cálculo de peso ideal (IMC 18.5 ~ 24.9)
                             val hM = height / 100
                             val minW = 18.5 * (hM * hM)
                             val maxW = 24.9 * (hM * hM)
 
-                            // Cria o objeto para salvar no banco
                             val entity = IMCResultEntity(
                                 weight = weight,
                                 height = height,
-                                imc = result.valueLiteral,
+                                imc = result.value, // CORREÇÃO: Usa o Double
                                 classification = result.text,
-
-                                // Campos novos que implementamos
                                 tmb = tmbCalculada,
                                 tdee = tdeeCalculada,
-
+                                bodyFat = fatCalculada,
                                 idealWeightMin = minW,
                                 idealWeightMax = maxW
                             )
 
-                            // Salva no banco
                             dao.insert(entity)
                         }
                     }

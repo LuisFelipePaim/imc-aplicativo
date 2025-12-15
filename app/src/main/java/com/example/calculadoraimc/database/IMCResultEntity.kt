@@ -15,7 +15,14 @@ data class IMCResultEntity(
     val imc: Double,
     val classification: String,
     val tmb: Double = 0.0,
-    val tdee: Double = 0.0, // <--- NOVO CAMPO: Calorias Diárias
+    val tdee: Double = 0.0,
+
+    // --- NOVOS CAMPOS PARA GORDURA ---
+    val bodyFat: Double = 0.0,
+    val waist: Double = 0.0,
+    val neck: Double = 0.0,
+    val hip: Double = 0.0, // Apenas para mulheres (0.0 para homens)
+
     val idealWeightMin: Double = 0.0,
     val idealWeightMax: Double = 0.0
 ) {

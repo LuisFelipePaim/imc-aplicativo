@@ -1,4 +1,5 @@
 package com.example.calculadoraimc.feature.home.components
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,17 +17,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.calculadoraimc.feature.home.components.IMCGraphic
-import com.example.calculadoraimc.feature.home.components.IconTag
 import com.example.calculadoraimc.feature.home.model.IMCData
-import com.example.calculadoraimc.ui.theme.BlackFont
-import com.example.calculadoraimc.ui.theme.BlueColor
 import com.example.calculadoraimc.ui.theme.CalculadoraIMCTheme
+import com.example.calculadoraimc.ui.theme.HealthPrimary
 
 @Composable
 fun MainCard(result: IMCData) {
@@ -34,7 +33,7 @@ fun MainCard(result: IMCData) {
         modifier = Modifier
             .fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = BlueColor
+            containerColor = HealthPrimary
         ),
         shape = RoundedCornerShape(
             size = 36.dp
@@ -64,7 +63,7 @@ fun MainCard(result: IMCData) {
                         style = MaterialTheme.typography.bodyLarge.copy(
                             fontSize = 20.sp
                         ),
-                        color = BlackFont,
+                        color = Color.White,
                         softWrap = false
                     )
                 }
@@ -72,23 +71,24 @@ fun MainCard(result: IMCData) {
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Text(
-                    text = result.value,
+                    text = result.valueLiteral, // Texto
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 56.sp
                     ),
-                    color = BlackFont
+                    color = Color.White
                 )
 
                 Text(
                     text = result.text,
                     style = MaterialTheme.typography.bodyLarge.copy(
                         fontSize = 24.sp
-                    )
+                    ),
+                    color = Color.White
                 )
             }
 
-            // SEGUNDA COLUNA
+            // SEGUNDA COLUNA (Gráfico)
             Column(
                 modifier = Modifier
                     .padding(start = 8.dp)
@@ -99,17 +99,17 @@ fun MainCard(result: IMCData) {
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                IMCGraphic(result.valueLiteral)
+                // CORREÇÃO: Passa o Double (value), não a String
+                IMCGraphic(imcValue = result.value)
             }
         }
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 private fun MainCardPreview() {
     CalculadoraIMCTheme {
-        MainCard(IMCData("44.4", "Teste", 0.0))
+        MainCard(IMCData("24.5", "Normal", 24.5))
     }
 }

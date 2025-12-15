@@ -40,7 +40,7 @@ public final class IMCDao_Impl implements IMCDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "INSERT OR ABORT INTO `imc_history` (`id`,`date`,`weight`,`height`,`imc`,`classification`,`tmb`,`tdee`,`idealWeightMin`,`idealWeightMax`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?,?)";
+        return "INSERT OR ABORT INTO `imc_history` (`id`,`date`,`weight`,`height`,`imc`,`classification`,`tmb`,`tdee`,`bodyFat`,`waist`,`neck`,`hip`,`idealWeightMin`,`idealWeightMax`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?,?,?,?,?,?)";
       }
 
       @Override
@@ -54,8 +54,12 @@ public final class IMCDao_Impl implements IMCDao {
         statement.bindString(6, entity.getClassification());
         statement.bindDouble(7, entity.getTmb());
         statement.bindDouble(8, entity.getTdee());
-        statement.bindDouble(9, entity.getIdealWeightMin());
-        statement.bindDouble(10, entity.getIdealWeightMax());
+        statement.bindDouble(9, entity.getBodyFat());
+        statement.bindDouble(10, entity.getWaist());
+        statement.bindDouble(11, entity.getNeck());
+        statement.bindDouble(12, entity.getHip());
+        statement.bindDouble(13, entity.getIdealWeightMin());
+        statement.bindDouble(14, entity.getIdealWeightMax());
       }
     };
     this.__deletionAdapterOfIMCResultEntity = new EntityDeletionOrUpdateAdapter<IMCResultEntity>(__db) {
@@ -129,6 +133,10 @@ public final class IMCDao_Impl implements IMCDao {
           final int _cursorIndexOfClassification = CursorUtil.getColumnIndexOrThrow(_cursor, "classification");
           final int _cursorIndexOfTmb = CursorUtil.getColumnIndexOrThrow(_cursor, "tmb");
           final int _cursorIndexOfTdee = CursorUtil.getColumnIndexOrThrow(_cursor, "tdee");
+          final int _cursorIndexOfBodyFat = CursorUtil.getColumnIndexOrThrow(_cursor, "bodyFat");
+          final int _cursorIndexOfWaist = CursorUtil.getColumnIndexOrThrow(_cursor, "waist");
+          final int _cursorIndexOfNeck = CursorUtil.getColumnIndexOrThrow(_cursor, "neck");
+          final int _cursorIndexOfHip = CursorUtil.getColumnIndexOrThrow(_cursor, "hip");
           final int _cursorIndexOfIdealWeightMin = CursorUtil.getColumnIndexOrThrow(_cursor, "idealWeightMin");
           final int _cursorIndexOfIdealWeightMax = CursorUtil.getColumnIndexOrThrow(_cursor, "idealWeightMax");
           final List<IMCResultEntity> _result = new ArrayList<IMCResultEntity>(_cursor.getCount());
@@ -150,11 +158,19 @@ public final class IMCDao_Impl implements IMCDao {
             _tmpTmb = _cursor.getDouble(_cursorIndexOfTmb);
             final double _tmpTdee;
             _tmpTdee = _cursor.getDouble(_cursorIndexOfTdee);
+            final double _tmpBodyFat;
+            _tmpBodyFat = _cursor.getDouble(_cursorIndexOfBodyFat);
+            final double _tmpWaist;
+            _tmpWaist = _cursor.getDouble(_cursorIndexOfWaist);
+            final double _tmpNeck;
+            _tmpNeck = _cursor.getDouble(_cursorIndexOfNeck);
+            final double _tmpHip;
+            _tmpHip = _cursor.getDouble(_cursorIndexOfHip);
             final double _tmpIdealWeightMin;
             _tmpIdealWeightMin = _cursor.getDouble(_cursorIndexOfIdealWeightMin);
             final double _tmpIdealWeightMax;
             _tmpIdealWeightMax = _cursor.getDouble(_cursorIndexOfIdealWeightMax);
-            _item = new IMCResultEntity(_tmpId,_tmpDate,_tmpWeight,_tmpHeight,_tmpImc,_tmpClassification,_tmpTmb,_tmpTdee,_tmpIdealWeightMin,_tmpIdealWeightMax);
+            _item = new IMCResultEntity(_tmpId,_tmpDate,_tmpWeight,_tmpHeight,_tmpImc,_tmpClassification,_tmpTmb,_tmpTdee,_tmpBodyFat,_tmpWaist,_tmpNeck,_tmpHip,_tmpIdealWeightMin,_tmpIdealWeightMax);
             _result.add(_item);
           }
           return _result;

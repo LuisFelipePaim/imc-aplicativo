@@ -1,28 +1,23 @@
 package com.example.calculadoraimc.ui.theme
 
-import android.graphics.ColorSpace.Rgb
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+// --- PALETA DIETBOX (Verde Vibrante) ---
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+val HealthPrimary = Color(0xFF00C853)      // Verde Dietbox (Vibrante)
+val HealthOnPrimary = Color(0xFFFFFFFF)
+val HealthContainer = Color(0xFFB9F6CA)    // Verde bem claro
 
-// -- Bases
-val WhiteTag = Color(0xFFFFFFFF)
-val BlueColor = Color(187, 231, 239)
-val GreenColor = Color(210, 235, 190)
-val GreyColor = Color(224, 224, 224, 255)
-val YellowColor = Color(255, 244, 148)
-val BlackFont = Color(0xFF191919)
+val HealthSecondary = Color(0xFF009624)    // Verde escuro para detalhes
+val HealthTertiary = Color(0xFF2962FF)     // Azul para botões de ação (ex: Salvar)
 
-// -- Cores para o nivel do IMC
-val GreenLevel = Color(4, 146, 132, 255)
-val RedLevel = Color(244, 67, 54, 255)
-val OrangeLevel = Color(255, 152, 0, 255)
+// Fundo geral da tela (Cinza bem clarinho igual da imagem)
+val BackgroundLight = Color(0xFFF5F5F5)
+val SurfaceWhite = Color(0xFFFFFFFF)
 
-// Testes
-val ColorTester = RedLevel
+// Cores dos Cards (Mantendo tons pastéis suaves)
+val CardGreen = Color(0xFFE8F5E9)
+val CardYellow = Color(0xFFFFFDE7)
+val CardOrange = Color(0xFFFFF3E0)
+val CardPink = Color(0xFFFCE4EC)
+val CardPurple = Color(0xFFF3E5F5)

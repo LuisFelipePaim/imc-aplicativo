@@ -31,12 +31,12 @@ public final class AppDatabase_Impl extends AppDatabase {
   @Override
   @NonNull
   protected SupportSQLiteOpenHelper createOpenHelper(@NonNull final DatabaseConfiguration config) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(2) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(3) {
       @Override
       public void createAllTables(@NonNull final SupportSQLiteDatabase db) {
-        db.execSQL("CREATE TABLE IF NOT EXISTS `imc_history` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `date` INTEGER NOT NULL, `weight` REAL NOT NULL, `height` REAL NOT NULL, `imc` REAL NOT NULL, `classification` TEXT NOT NULL, `tmb` REAL NOT NULL, `tdee` REAL NOT NULL, `idealWeightMin` REAL NOT NULL, `idealWeightMax` REAL NOT NULL)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `imc_history` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `date` INTEGER NOT NULL, `weight` REAL NOT NULL, `height` REAL NOT NULL, `imc` REAL NOT NULL, `classification` TEXT NOT NULL, `tmb` REAL NOT NULL, `tdee` REAL NOT NULL, `bodyFat` REAL NOT NULL, `waist` REAL NOT NULL, `neck` REAL NOT NULL, `hip` REAL NOT NULL, `idealWeightMin` REAL NOT NULL, `idealWeightMax` REAL NOT NULL)");
         db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c52263d493ba9abe1758c02a3b30f6da')");
+        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '526c6620ea7603c6c0919a82ca5496a1')");
       }
 
       @Override
@@ -85,7 +85,7 @@ public final class AppDatabase_Impl extends AppDatabase {
       @NonNull
       public RoomOpenHelper.ValidationResult onValidateSchema(
           @NonNull final SupportSQLiteDatabase db) {
-        final HashMap<String, TableInfo.Column> _columnsImcHistory = new HashMap<String, TableInfo.Column>(10);
+        final HashMap<String, TableInfo.Column> _columnsImcHistory = new HashMap<String, TableInfo.Column>(14);
         _columnsImcHistory.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsImcHistory.put("date", new TableInfo.Column("date", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsImcHistory.put("weight", new TableInfo.Column("weight", "REAL", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
@@ -94,6 +94,10 @@ public final class AppDatabase_Impl extends AppDatabase {
         _columnsImcHistory.put("classification", new TableInfo.Column("classification", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsImcHistory.put("tmb", new TableInfo.Column("tmb", "REAL", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsImcHistory.put("tdee", new TableInfo.Column("tdee", "REAL", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsImcHistory.put("bodyFat", new TableInfo.Column("bodyFat", "REAL", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsImcHistory.put("waist", new TableInfo.Column("waist", "REAL", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsImcHistory.put("neck", new TableInfo.Column("neck", "REAL", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsImcHistory.put("hip", new TableInfo.Column("hip", "REAL", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsImcHistory.put("idealWeightMin", new TableInfo.Column("idealWeightMin", "REAL", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsImcHistory.put("idealWeightMax", new TableInfo.Column("idealWeightMax", "REAL", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         final HashSet<TableInfo.ForeignKey> _foreignKeysImcHistory = new HashSet<TableInfo.ForeignKey>(0);
@@ -107,7 +111,7 @@ public final class AppDatabase_Impl extends AppDatabase {
         }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "c52263d493ba9abe1758c02a3b30f6da", "c7d4a14b4276f053b463347bd9db35a2");
+    }, "526c6620ea7603c6c0919a82ca5496a1", "b6904bff962041c68a173ad01a3574dd");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(config.context).name(config.name).callback(_openCallback).build();
     final SupportSQLiteOpenHelper _helper = config.sqliteOpenHelperFactory.create(_sqliteConfig);
     return _helper;

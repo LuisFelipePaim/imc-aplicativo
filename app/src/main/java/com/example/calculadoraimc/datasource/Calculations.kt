@@ -2,6 +2,7 @@ package com.example.calculadoraimc.datasource
 
 import android.annotation.SuppressLint
 import com.example.calculadoraimc.feature.home.model.IMCData
+import kotlin.math.log10
 
 object Calculations {
 
@@ -11,13 +12,23 @@ object Calculations {
         weight: String,
         age: String,
         isMale: Boolean,
-        activityFactor: Double, // <--- Novo Parâmetro (1.2, 1.375, etc)
-        response: (IMCData, Double, Double, Double, Double) -> Unit // Retorna +1 Double (TDEE)
+        activityFactor: Double,
+        // Novos parâmetros opcionais
+        neck: String = "",
+        waist: String = "",
+        hip: String = "",
+        // Callback atualizado (+ bodyFat)
+        response: (IMCData, Double, Double, Double, Double, Double) -> Unit
     ) {
         if (height.isNotEmpty() && weight.isNotEmpty() && age.isNotEmpty()) {
             val heightFormatted = height.replace(",", ".").toDoubleOrNull()
             val weightFormatted = weight.replace(",", ".").toDoubleOrNull()
             val ageFormatted = age.toIntOrNull()
+
+            // Formata medidas extras (se vazias, vira 0.0)
+            val neckFormatted = neck.replace(",", ".").toDoubleOrNull() ?: 0.0
+            val waistFormatted = waist.replace(",", ".").toDoubleOrNull() ?: 0.0
+            val hipFormatted = hip.replace(",", ".").toDoubleOrNull() ?: 0.0
 
             if (weightFormatted != null && heightFormatted != null && heightFormatted > 0 && ageFormatted != null) {
                 // 1. IMC
@@ -41,17 +52,42 @@ object Calculations {
                     (10 * weightFormatted) + (6.25 * heightFormatted) - (5 * ageFormatted) - 161
                 }
 
-                // 3. TDEE (Necessidade Calórica)
                 val tdee = tmb * activityFactor
 
-                // Retorna: IMC, Peso, Altura, TMB, TDEE
-                response(imcData, weightFormatted, heightFormatted, tmb, tdee)
+                // 3. GORDURA CORPORAL (US Navy Method)
+                var bodyFat = 0.0
+                if (neckFormatted > 0 && waistFormatted > 0) {
+                    if (isMale) {
+                        // Homens: 495 / (1.0324 - 0.19077(log(cintura-pescoço)) + 0.1554(log(altura))) - 450
+                        // Nota: Fórmulas usam CM. log10 exige Double.
+                        if (waistFormatted > neckFormatted) {
+                            val log1 = log10(waistFormatted - neckFormatted)
+                            val log2 = log10(heightFormatted)
+                            val density = 1.0324 - (0.19077 * log1) + (0.1554 * log2)
+                            bodyFat = (495 / density) - 450
+                        }
+                    } else {
+                        // Mulheres: precisa do quadril
+                        if (hipFormatted > 0) {
+                            val log1 = log10(waistFormatted + hipFormatted - neckFormatted)
+                            val log2 = log10(heightFormatted)
+                            val density = 1.29579 - (0.35004 * log1) + (0.22100 * log2)
+                            bodyFat = (495 / density) - 450
+                        }
+                    }
+                }
+
+                // Evita resultados negativos matemáticos
+                if (bodyFat < 0) bodyFat = 0.0
+
+                // Retorna 6 valores
+                response(imcData, weightFormatted, heightFormatted, tmb, tdee, bodyFat)
 
             } else {
-                response(IMCData("null", "Valores inválidos", 0.0), 0.0, 0.0, 0.0, 0.0)
+                response(IMCData("null", "Inválido", 0.0), 0.0, 0.0, 0.0, 0.0, 0.0)
             }
         } else {
-            response(IMCData("null", "Preencha os campos", 0.0), 0.0, 0.0, 0.0, 0.0)
+            response(IMCData("null", "Preencha", 0.0), 0.0, 0.0, 0.0, 0.0, 0.0)
         }
     }
 }

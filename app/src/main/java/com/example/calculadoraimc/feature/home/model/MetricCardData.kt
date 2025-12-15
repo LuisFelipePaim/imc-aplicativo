@@ -1,14 +1,14 @@
 package com.example.calculadoraimc.feature.home.model
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Bolt // Raio para energia
+import androidx.compose.material.icons.rounded.Bolt
 import androidx.compose.material.icons.rounded.Height
 import androidx.compose.material.icons.rounded.LocalFireDepartment
+import androidx.compose.material.icons.rounded.Opacity
 import androidx.compose.ui.graphics.Color
 import com.example.calculadoraimc.R
 import com.example.calculadoraimc.ui.models.IconUse
-import com.example.calculadoraimc.ui.theme.GreenColor
-import com.example.calculadoraimc.ui.theme.YellowColor
+import com.example.calculadoraimc.ui.theme.*
 
 sealed class MetricCardData(
     val title: String,
@@ -18,21 +18,18 @@ sealed class MetricCardData(
     val color: Color
 ) {
     data class Height(override val value: Float) : MetricCardData(
-        title = "Altura", unitMeasure = "m", icon = IconUse.Vector(Icons.Rounded.Height), value = value, color = GreenColor
+        "Altura", "m", IconUse.Vector(Icons.Rounded.Height), value, CardGreen
     )
     data class Weight(override val value: Float) : MetricCardData(
-        title = "Peso", unitMeasure = "kg", icon = IconUse.Painter(R.drawable.weight_24px), value = value, color = YellowColor
+        "Peso", "kg", IconUse.Painter(R.drawable.weight_24px), value, CardYellow
     )
     data class Tmb(override val value: Float) : MetricCardData(
-        title = "TMB (Basal)", unitMeasure = "kcal", icon = IconUse.Vector(Icons.Rounded.LocalFireDepartment), value = value, color = Color(255, 152, 0, 255)
+        "TMB", "kcal", IconUse.Vector(Icons.Rounded.LocalFireDepartment), value, CardOrange
     )
-
-    // --- NOVO CARD ---
     data class Tdee(override val value: Float) : MetricCardData(
-        title = "Necessidade",
-        unitMeasure = "kcal/dia",
-        icon = IconUse.Vector(Icons.Rounded.Bolt),
-        value = value,
-        color = Color(233, 30, 99, 255) // Rosa
+        "Necessidade", "kcal/dia", IconUse.Vector(Icons.Rounded.Bolt), value, CardPink
+    )
+    data class BodyFat(override val value: Float) : MetricCardData(
+        "Gordura", "%", IconUse.Vector(Icons.Rounded.Opacity), value, CardPurple
     )
 }
