@@ -8,7 +8,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import androidx.core.app.NotificationCompat // O Import essencial
+import androidx.core.app.NotificationCompat
 import com.example.calculadoraimc.R
 import com.example.calculadoraimc.ui.MainActivity
 import java.util.Calendar

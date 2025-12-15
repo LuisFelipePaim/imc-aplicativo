@@ -64,9 +64,6 @@ fun MetricCard(
                 verticalAlignment = Alignment.Bottom
             ) {
                 Text(
-                    // 2. Formatação condicional:
-                    // - TMB e TDEE (Calorias): Sem casas decimais (ex: 1850)
-                    // - Outros (Peso, Altura, Gordura): Com casas decimais
                     text = if (metrics is MetricCardData.Tmb || metrics is MetricCardData.Tdee)
                         String.format("%.0f", valueCard)
                     else if (metrics is MetricCardData.BodyFat)
@@ -95,7 +92,6 @@ fun MetricCard(
 @Composable
 fun MetricCardPreview() {
     CalculadoraIMCTheme {
-        // Exemplo apenas para preview
         MetricCard(
             metrics = MetricCardData.Height(175f)
         )

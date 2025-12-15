@@ -11,7 +11,7 @@ import com.example.calculadoraimc.ui.theme.HealthTertiary
 data class IMCGraphicStatus(
     val label: String,
     val color: Color,
-    val icon: ImageVector // Mudamos para vetor nativo
+    val icon: ImageVector
 )
 
 val statusGraphic = mapOf(

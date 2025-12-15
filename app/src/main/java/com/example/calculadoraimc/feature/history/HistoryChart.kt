@@ -31,7 +31,6 @@ fun HistoryChart(historyData: List<IMCResultEntity>) {
         val entries = reversedData.mapIndexed { index, item ->
             entryOf(index.toFloat(), item.imc.toFloat())
         }
-        // CORREÇÃO: Adicionado !! no final
         ChartEntryModelProducer(entries).getModel()!!
     }
 

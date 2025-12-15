@@ -22,7 +22,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Inicializa o Banco de Dados
         val db = AppDatabase.getDatabase(this)
         val dao = db.imcDao()
 
@@ -36,10 +35,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen(dao: com.example.calculadoraimc.database.IMCDao) {
-    // Controla as abas (0 = Home, 1 = Histórico)
     var currentTab by remember { mutableIntStateOf(0) }
 
-    // Lista observável do banco de dados
     val historyList by dao.getAllHistory().collectAsState(initial = emptyList())
 
     val scope = rememberCoroutineScope()
@@ -65,7 +62,6 @@ fun MainScreen(dao: com.example.calculadoraimc.database.IMCDao) {
         Surface(modifier = Modifier.padding(paddingValues)) {
 
             if (currentTab == 0) {
-                // --- TELA HOME ---
                 Home(
                     historyListForExport = historyList,
                     onCalculate = { result, weight, height, tmbCalculada, tdeeCalculada, fatCalculada ->
@@ -92,7 +88,6 @@ fun MainScreen(dao: com.example.calculadoraimc.database.IMCDao) {
                     }
                 )
             } else {
-                // --- TELA HISTÓRICO ---
                 HistoryScreen(
                     historyList = historyList,
                     onDelete = { item ->

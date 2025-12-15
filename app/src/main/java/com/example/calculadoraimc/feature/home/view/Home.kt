@@ -55,7 +55,6 @@ fun Home(
     var bodyFatUser by remember { mutableDoubleStateOf(0.0) }
 
     val context = LocalContext.current
-    // Data formatada (ex: Segunda, 15 de Dezembro)
     val currentDate = remember {
         SimpleDateFormat("EEEE, d 'de' MMMM", Locale("pt", "BR")).format(Date())
     }
@@ -65,7 +64,6 @@ fun Home(
             .fillMaxSize()
             .background(Color(0xFFF5F5F5)) // Fundo cinza bem claro
     ) {
-        // --- 1. CABEÇALHO VERDE CURVO (Igual ao da imagem Nature) ---
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -88,14 +86,14 @@ fun Home(
 
             Spacer(modifier = Modifier.height(48.dp))
 
-            // Texto da Data
+
             Text(
                 text = currentDate.replaceFirstChar { it.uppercase() },
                 style = MaterialTheme.typography.labelLarge,
                 color = Color.White.copy(alpha = 0.8f)
             )
 
-            // Título Principal
+
             Text(
                 text = "Calculadora IMC",
                 style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold),
@@ -104,12 +102,10 @@ fun Home(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // --- 2. NOVOS BOTÕES "PILL SHAPE" (Brancos no fundo Verde) ---
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Botão Exportar
                 Button(
                     onClick = {
                         if (historyListForExport.isNotEmpty()) CsvExporter.exportAndShare(context, historyListForExport)
@@ -130,7 +126,6 @@ fun Home(
                     Text("Exportar", fontWeight = FontWeight.Bold)
                 }
 
-                // Botão Lembrete
                 Button(
                     onClick = {
                         NotificationReceiver.scheduleDaily(context)
@@ -154,7 +149,6 @@ fun Home(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // --- 3. CARD FLUTUANTE (Inputs) ---
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(24.dp),
@@ -184,7 +178,6 @@ fun Home(
                 }
             }
 
-            // --- 4. RESULTADOS ---
             resultIMC?.let {
                 Spacer(modifier = Modifier.height(24.dp))
 

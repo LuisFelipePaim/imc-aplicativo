@@ -44,12 +44,10 @@ fun MainCard(result: IMCData) {
                 .padding(20.dp, 24.dp, 20.dp, 40.dp)
                 .fillMaxWidth()
         ) {
-            // PRIMEIRA COLUNA
             Column(
                 modifier = Modifier
                     .padding(end = 8.dp)
             ) {
-                // Tag superior
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -88,7 +86,6 @@ fun MainCard(result: IMCData) {
                 )
             }
 
-            // SEGUNDA COLUNA (Gráfico)
             Column(
                 modifier = Modifier
                     .padding(start = 8.dp)
@@ -99,7 +96,6 @@ fun MainCard(result: IMCData) {
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // CORREÇÃO: Passa o Double (value), não a String
                 IMCGraphic(imcValue = result.value)
             }
         }

@@ -2,7 +2,6 @@ package com.example.calculadoraimc.datasource
 
 object InputValidator {
 
-    // Retorna null se estiver válido, ou uma mensagem de erro String se falhar
     fun validateHeight(height: String): String? {
         if (height.isBlank()) return "Campo obrigatório"
 

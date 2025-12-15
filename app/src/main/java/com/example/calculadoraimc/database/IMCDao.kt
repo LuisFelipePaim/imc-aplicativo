@@ -11,7 +11,6 @@ interface IMCDao {
     @Insert
     suspend fun insert(imcResult: IMCResultEntity)
 
-    // Retorna um Flow para a lista atualizar automaticamente
     @Query("SELECT * FROM imc_history ORDER BY date DESC")
     fun getAllHistory(): Flow<List<IMCResultEntity>>
 

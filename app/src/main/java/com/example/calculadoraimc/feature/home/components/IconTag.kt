@@ -19,19 +19,16 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.calculadoraimc.ui.theme.CalculadoraIMCTheme
 
-// LINHA DO ERRO REMOVIDA: import com.example.calculadoraimc.ui.theme.WhiteTag
 
 @Composable
 fun IconTag(
     icon: Painter,
     contentDescription: String,
-    // CORREÇÃO: Mudamos o padrão de 'WhiteTag' para 'Color.White'
     circleColor: Color = Color.White,
     iconColor: Color = Color.Black,
     circleSize: Dp = 40.dp,
     iconSize: Dp = 20.dp
 ) {
-    // Circulo de fundo
     Box(
         modifier = Modifier
             .size(circleSize)

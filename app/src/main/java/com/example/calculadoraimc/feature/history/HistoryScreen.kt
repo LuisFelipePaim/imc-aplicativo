@@ -14,7 +14,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.calculadoraimc.database.IMCResultEntity
-// IMPORTS DO NOVO TEMA
 import com.example.calculadoraimc.ui.theme.HealthPrimary
 import com.example.calculadoraimc.ui.theme.HealthSecondary
 
@@ -34,7 +33,6 @@ fun HistoryScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // GRÁFICO NO TOPO
             item {
                 HistoryChart(historyData = historyList)
             }
@@ -46,7 +44,6 @@ fun HistoryScreen(
         }
     }
 
-    // Modal (Dialog) de Detalhes
     selectedItem?.let { item ->
         DetailDialog(
             item = item,

@@ -4,18 +4,16 @@ import androidx.compose.ui.graphics.Color
 
 // --- PALETA DIETBOX (Verde Vibrante) ---
 
-val HealthPrimary = Color(0xFF00C853)      // Verde Dietbox (Vibrante)
+val HealthPrimary = Color(0xFF00C853)
 val HealthOnPrimary = Color(0xFFFFFFFF)
-val HealthContainer = Color(0xFFB9F6CA)    // Verde bem claro
+val HealthContainer = Color(0xFFB9F6CA)
 
-val HealthSecondary = Color(0xFF009624)    // Verde escuro para detalhes
-val HealthTertiary = Color(0xFF2962FF)     // Azul para botões de ação (ex: Salvar)
+val HealthSecondary = Color(0xFF009624)
+val HealthTertiary = Color(0xFF2962FF)
 
-// Fundo geral da tela (Cinza bem clarinho igual da imagem)
 val BackgroundLight = Color(0xFFF5F5F5)
 val SurfaceWhite = Color(0xFFFFFFFF)
 
-// Cores dos Cards (Mantendo tons pastéis suaves)
 val CardGreen = Color(0xFFE8F5E9)
 val CardYellow = Color(0xFFFFFDE7)
 val CardOrange = Color(0xFFFFF3E0)

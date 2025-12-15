@@ -17,7 +17,6 @@ data class IMCResultEntity(
     val tmb: Double = 0.0,
     val tdee: Double = 0.0,
 
-    // --- NOVOS CAMPOS PARA GORDURA ---
     val bodyFat: Double = 0.0,
     val waist: Double = 0.0,
     val neck: Double = 0.0,
