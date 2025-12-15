@@ -40,7 +40,7 @@ public final class IMCDao_Impl implements IMCDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "INSERT OR ABORT INTO `imc_history` (`id`,`date`,`weight`,`height`,`imc`,`classification`,`tmb`,`idealWeightMin`,`idealWeightMax`,`fatPercentage`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?,?)";
+        return "INSERT OR ABORT INTO `imc_history` (`id`,`date`,`weight`,`height`,`imc`,`classification`,`tmb`,`tdee`,`idealWeightMin`,`idealWeightMax`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?,?)";
       }
 
       @Override
@@ -53,9 +53,9 @@ public final class IMCDao_Impl implements IMCDao {
         statement.bindDouble(5, entity.getImc());
         statement.bindString(6, entity.getClassification());
         statement.bindDouble(7, entity.getTmb());
-        statement.bindDouble(8, entity.getIdealWeightMin());
-        statement.bindDouble(9, entity.getIdealWeightMax());
-        statement.bindDouble(10, entity.getFatPercentage());
+        statement.bindDouble(8, entity.getTdee());
+        statement.bindDouble(9, entity.getIdealWeightMin());
+        statement.bindDouble(10, entity.getIdealWeightMax());
       }
     };
     this.__deletionAdapterOfIMCResultEntity = new EntityDeletionOrUpdateAdapter<IMCResultEntity>(__db) {
@@ -128,9 +128,9 @@ public final class IMCDao_Impl implements IMCDao {
           final int _cursorIndexOfImc = CursorUtil.getColumnIndexOrThrow(_cursor, "imc");
           final int _cursorIndexOfClassification = CursorUtil.getColumnIndexOrThrow(_cursor, "classification");
           final int _cursorIndexOfTmb = CursorUtil.getColumnIndexOrThrow(_cursor, "tmb");
+          final int _cursorIndexOfTdee = CursorUtil.getColumnIndexOrThrow(_cursor, "tdee");
           final int _cursorIndexOfIdealWeightMin = CursorUtil.getColumnIndexOrThrow(_cursor, "idealWeightMin");
           final int _cursorIndexOfIdealWeightMax = CursorUtil.getColumnIndexOrThrow(_cursor, "idealWeightMax");
-          final int _cursorIndexOfFatPercentage = CursorUtil.getColumnIndexOrThrow(_cursor, "fatPercentage");
           final List<IMCResultEntity> _result = new ArrayList<IMCResultEntity>(_cursor.getCount());
           while (_cursor.moveToNext()) {
             final IMCResultEntity _item;
@@ -148,13 +148,13 @@ public final class IMCDao_Impl implements IMCDao {
             _tmpClassification = _cursor.getString(_cursorIndexOfClassification);
             final double _tmpTmb;
             _tmpTmb = _cursor.getDouble(_cursorIndexOfTmb);
+            final double _tmpTdee;
+            _tmpTdee = _cursor.getDouble(_cursorIndexOfTdee);
             final double _tmpIdealWeightMin;
             _tmpIdealWeightMin = _cursor.getDouble(_cursorIndexOfIdealWeightMin);
             final double _tmpIdealWeightMax;
             _tmpIdealWeightMax = _cursor.getDouble(_cursorIndexOfIdealWeightMax);
-            final double _tmpFatPercentage;
-            _tmpFatPercentage = _cursor.getDouble(_cursorIndexOfFatPercentage);
-            _item = new IMCResultEntity(_tmpId,_tmpDate,_tmpWeight,_tmpHeight,_tmpImc,_tmpClassification,_tmpTmb,_tmpIdealWeightMin,_tmpIdealWeightMax,_tmpFatPercentage);
+            _item = new IMCResultEntity(_tmpId,_tmpDate,_tmpWeight,_tmpHeight,_tmpImc,_tmpClassification,_tmpTmb,_tmpTdee,_tmpIdealWeightMin,_tmpIdealWeightMax);
             _result.add(_item);
           }
           return _result;

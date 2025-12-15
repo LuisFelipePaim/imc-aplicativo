@@ -6,7 +6,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowForwardIos
-import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -56,7 +55,7 @@ fun HistoryScreen(
 fun HistoryItemCard(item: IMCResultEntity, onClick: () -> Unit) {
     Card(
         onClick = onClick,
-        colors = CardDefaults.cardColors(containerColor = Color.White), // ou use cores do seu tema
+        colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(2.dp)
     ) {
         Row(
@@ -105,6 +104,17 @@ fun DetailDialog(item: IMCResultEntity, onClose: () -> Unit, onDelete: () -> Uni
                     Text("Estimativas:", fontWeight = FontWeight.Bold, fontSize = 14.sp)
                     DetailRow("Peso Ideal Min", "${String.format("%.1f", item.idealWeightMin)} kg")
                     DetailRow("Peso Ideal Max", "${String.format("%.1f", item.idealWeightMax)} kg")
+                }
+
+                // Exibe TMB e TDEE se existirem (registros novos)
+                if (item.tmb > 0) {
+                    HorizontalDivider()
+                    Text("Energia:", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                    DetailRow("TMB (Basal)", "${String.format("%.0f", item.tmb)} kcal")
+
+                    if (item.tdee > 0) {
+                        DetailRow("Necessidade Diária", "${String.format("%.0f", item.tdee)} kcal")
+                    }
                 }
             }
         },

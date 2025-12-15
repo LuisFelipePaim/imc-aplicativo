@@ -5,55 +5,53 @@ import com.example.calculadoraimc.feature.home.model.IMCData
 
 object Calculations {
 
-    // Data class auxiliar para retornar tudo de uma vez
-    data class CalculationResult(
-        val imcData: IMCData,
-        val weight: Double,
-        val height: Double,
-        val idealWeightMin: Double,
-        val idealWeightMax: Double
-    )
-
     @SuppressLint("DefaultLocale")
-    fun calculateComplete(
-        heightStr: String,
-        weightStr: String,
-        onResult: (CalculationResult) -> Unit
+    fun calculateIMC(
+        height: String,
+        weight: String,
+        age: String,
+        isMale: Boolean,
+        activityFactor: Double, // <--- Novo Parâmetro (1.2, 1.375, etc)
+        response: (IMCData, Double, Double, Double, Double) -> Unit // Retorna +1 Double (TDEE)
     ) {
-        if (heightStr.isNotEmpty() && weightStr.isNotEmpty()) {
-            val h = heightStr.replace(",", ".").toDoubleOrNull()
-            val w = weightStr.replace(",", ".").toDoubleOrNull()
+        if (height.isNotEmpty() && weight.isNotEmpty() && age.isNotEmpty()) {
+            val heightFormatted = height.replace(",", ".").toDoubleOrNull()
+            val weightFormatted = weight.replace(",", ".").toDoubleOrNull()
+            val ageFormatted = age.toIntOrNull()
 
-            if (w != null && h != null && h > 0) {
-                val heightM = h / 100
-                val imc = w / (heightM * heightM)
-                val imcFormatted = String.format("%.2f", imc)
+            if (weightFormatted != null && heightFormatted != null && heightFormatted > 0 && ageFormatted != null) {
+                // 1. IMC
+                val alturaEmMetros = heightFormatted / 100
+                val imc = weightFormatted / (alturaEmMetros * alturaEmMetros)
+                val imcFormate = String.format("%.2f", imc)
 
-                // Texto e Classificação
-                val (text, type) = when {
-                    imc < 18.5 -> "Abaixo do peso" to "atencao"
-                    imc < 25 -> "Peso normal" to "normal"
-                    imc < 30 -> "Sobrepeso" to "atencao"
-                    imc < 35 -> "Obesidade Grau I" to "critico"
-                    imc < 40 -> "Obesidade Grau II" to "critico"
-                    else -> "Obesidade Grau III" to "critico"
+                val imcData = when {
+                    imc < 18.5 -> IMCData(imcFormate, "Abaixo do peso", imc)
+                    imc < 25 -> IMCData(imcFormate, "Peso normal", imc)
+                    imc < 30 -> IMCData(imcFormate, "Sobrepeso", imc)
+                    imc < 35 -> IMCData(imcFormate, "Obesidade Grau I", imc)
+                    imc < 40 -> IMCData(imcFormate, "Obesidade Grau II", imc)
+                    else -> IMCData(imcFormate, "Obesidade Grau III", imc)
                 }
 
-                val imcData = IMCData(imcFormatted, text, imc)
+                // 2. TMB (Mifflin-St Jeor)
+                val tmb = if (isMale) {
+                    (10 * weightFormatted) + (6.25 * heightFormatted) - (5 * ageFormatted) + 5
+                } else {
+                    (10 * weightFormatted) + (6.25 * heightFormatted) - (5 * ageFormatted) - 161
+                }
 
-                // Cálculo Peso Ideal (IMC 18.5 a 24.9)
-                val idealMin = 18.5 * (heightM * heightM)
-                val idealMax = 24.9 * (heightM * heightM)
+                // 3. TDEE (Necessidade Calórica)
+                val tdee = tmb * activityFactor
 
-                onResult(CalculationResult(imcData, w, h, idealMin, idealMax))
+                // Retorna: IMC, Peso, Altura, TMB, TDEE
+                response(imcData, weightFormatted, heightFormatted, tmb, tdee)
+
+            } else {
+                response(IMCData("null", "Valores inválidos", 0.0), 0.0, 0.0, 0.0, 0.0)
             }
-        }
-    }
-
-    // Mantive a função antiga caso algo ainda a use, mas redirecionando
-    fun calculateIMC(height: String, weight: String, response: (IMCData, Double, Double) -> Unit) {
-        calculateComplete(height, weight) { res ->
-            response(res.imcData, res.weight, res.height)
+        } else {
+            response(IMCData("null", "Preencha os campos", 0.0), 0.0, 0.0, 0.0, 0.0)
         }
     }
 }

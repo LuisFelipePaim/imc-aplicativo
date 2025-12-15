@@ -10,7 +10,6 @@ import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.lifecycleScope
 import com.example.calculadoraimc.database.AppDatabase
 import com.example.calculadoraimc.database.IMCResultEntity
 import com.example.calculadoraimc.feature.history.HistoryScreen
@@ -29,7 +28,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             CalculadoraIMCTheme {
-                // Passamos o DAO para a tela principal
+                // Passamos o DAO para a tela principal gerenciar os dados
                 MainScreen(dao)
             }
         }
@@ -41,10 +40,11 @@ fun MainScreen(dao: com.example.calculadoraimc.database.IMCDao) {
     // Controla qual aba está visível: 0 = Home, 1 = Histórico
     var currentTab by remember { mutableIntStateOf(0) }
 
-    // Lê os dados do banco em tempo real
+    // Lê os dados do banco em tempo real (Flow -> State)
+    // Essa lista é usada tanto para exibir no Histórico quanto para Exportar CSV na Home
     val historyList by dao.getAllHistory().collectAsState(initial = emptyList())
 
-    // Escopo para salvar/deletar no banco (Background Thread)
+    // Escopo para operações de banco em background (IO)
     val scope = rememberCoroutineScope()
 
     Scaffold(
@@ -65,32 +65,46 @@ fun MainScreen(dao: com.example.calculadoraimc.database.IMCDao) {
             }
         }
     ) { paddingValues ->
+        // Surface garante o fundo correto e aplica o padding da barra inferior
         Surface(modifier = Modifier.padding(paddingValues)) {
+
             if (currentTab == 0) {
-                // TELA HOME
-                // Precisamos passar um evento de "Salvar" para a Home
+                // --- TELA HOME ---
                 Home(
-                    onCalculate = { result, weight, height ->
+                    // Passamos a lista para que o botão de "Download" possa gerar o CSV
+                    historyListForExport = historyList,
+
+                    // Callback executado quando o usuário clica em "Calcular"
+                    onCalculate = { result, weight, height, tmbCalculada, tdeeCalculada ->
                         scope.launch(Dispatchers.IO) {
-                            // Cálculo simples do Peso Ideal para salvar
+
+                            // Lógica adicional: Cálculo de peso ideal (IMC 18.5 ~ 24.9)
                             val hM = height / 100
                             val minW = 18.5 * (hM * hM)
                             val maxW = 24.9 * (hM * hM)
 
+                            // Cria o objeto para salvar no banco
                             val entity = IMCResultEntity(
                                 weight = weight,
                                 height = height,
                                 imc = result.valueLiteral,
                                 classification = result.text,
+
+                                // Campos novos que implementamos
+                                tmb = tmbCalculada,
+                                tdee = tdeeCalculada,
+
                                 idealWeightMin = minW,
                                 idealWeightMax = maxW
                             )
+
+                            // Salva no banco
                             dao.insert(entity)
                         }
                     }
                 )
             } else {
-                // TELA HISTÓRICO
+                // --- TELA HISTÓRICO ---
                 HistoryScreen(
                     historyList = historyList,
                     onDelete = { item ->
