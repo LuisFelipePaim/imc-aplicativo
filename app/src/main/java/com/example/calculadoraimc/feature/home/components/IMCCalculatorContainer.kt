@@ -36,15 +36,18 @@ fun IMCCalculatorContainer(
     val activityOptions = listOf("Sedentário" to 1.2, "Leve" to 1.375, "Moderado" to 1.55, "Intenso" to 1.725)
     var selectedOption by remember { mutableStateOf(activityOptions[0]) }
 
-    // ESTADOS DE ERRO PARA VALIDAÇÃO VISUAL
     var isHeightError by remember { mutableStateOf(false) }
     var isWeightError by remember { mutableStateOf(false) }
     var isAgeError by remember { mutableStateOf(false) }
 
     fun validateFields(): Boolean {
-        isHeightError = height.isBlank() || (height.toIntOrNull() ?: 0) <= 0
-        isWeightError = weight.isBlank() || (weight.toDoubleOrNull() ?: 0.0) <= 0.0 || (weight.toDoubleOrNull() ?: 0.0) > 600.0
-        isAgeError = age.isBlank() || (age.toIntOrNull() ?: 0) < 0 || (age.toIntOrNull() ?: 0) > 130
+        val hValue = height.trim().toIntOrNull()
+        val wValue = weight.replace(",", ".").trim().toDoubleOrNull()
+        val aValue = age.trim().toIntOrNull()
+
+        isHeightError = hValue == null || hValue < 50 || hValue > 300
+        isWeightError = wValue == null || wValue < 2.0 || wValue > 600.0
+        isAgeError = aValue == null || aValue < 0 || aValue > 130
 
         return !(isHeightError || isWeightError || isAgeError)
     }
@@ -55,29 +58,32 @@ fun IMCCalculatorContainer(
                 modifier = Modifier.weight(1f),
                 shape = RoundedCornerShape(16.dp),
                 value = height,
-                onValueChange = {
-                    height = it
-                    isHeightError = false // Limpa o erro ao digitar
+                onValueChange = { newValue ->
+                    if (newValue.all { it.isDigit() } && newValue.length <= 3) {
+                        height = newValue
+                        isHeightError = false
+                    }
                 },
                 label = { Text("Altura (cm)") },
+                placeholder = { Text("Ex: 175") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 isError = isHeightError,
-                supportingText = { if (isHeightError) Text("Altura inválida.", color = MaterialTheme.colorScheme.error) }
+                supportingText = { if (isHeightError) Text("Use CM (50-300)", color = MaterialTheme.colorScheme.error) }
             )
             OutlinedTextField(
                 modifier = Modifier.weight(1f),
                 shape = RoundedCornerShape(16.dp),
                 value = weight,
-                onValueChange = {
-                    if (it.isEmpty() || (it.toDoubleOrNull() ?: 0.0) <= 600.0) {
-                        weight = it
-                        isWeightError = false // Limpa o erro ao digitar
+                onValueChange = { newValue ->
+                    if (newValue.all { it.isDigit() || it == '.' || it == ',' } && newValue.length <= 6) {
+                        weight = newValue
+                        isWeightError = false
                     }
                 },
                 label = { Text("Peso (kg)") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 isError = isWeightError,
-                supportingText = { if (isWeightError) Text("Peso inválido (máx 600kg).", color = MaterialTheme.colorScheme.error) }
+                supportingText = { if (isWeightError) Text("Inválido (2-600kg)", color = MaterialTheme.colorScheme.error) }
             )
         }
         Spacer(Modifier.height(16.dp))
@@ -87,17 +93,16 @@ fun IMCCalculatorContainer(
                 modifier = Modifier.weight(0.8f),
                 shape = RoundedCornerShape(16.dp),
                 value = age,
-                onValueChange = {
-                    val newAge = it.toIntOrNull()
-                    if (it.isEmpty() || (newAge != null && newAge in 0..130)) {
-                        age = it
-                        isAgeError = false // Limpa o erro ao digitar
+                onValueChange = { newValue ->
+                    if (newValue.all { it.isDigit() } && newValue.length <= 3) {
+                        age = newValue
+                        isAgeError = false
                     }
                 },
                 label = { Text("Idade") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 isError = isAgeError,
-                supportingText = { if (isAgeError) Text("Idade inválida (0-130).", color = MaterialTheme.colorScheme.error) }
+                supportingText = { if (isAgeError) Text("0-130 anos", color = MaterialTheme.colorScheme.error) }
             )
             Row(modifier = Modifier.weight(1.2f), horizontalArrangement = Arrangement.SpaceEvenly) {
                 FilterChip(selected = isMale, onClick = { isMale = true }, label = { Text("Masc") })
@@ -113,20 +118,20 @@ fun IMCCalculatorContainer(
             OutlinedTextField(
                 modifier = Modifier.weight(1f),
                 shape = RoundedCornerShape(16.dp),
-                value = neck, onValueChange = { neck = it },
+                value = neck, onValueChange = { if (it.all { char -> char.isDigit() || char == '.' || char == ',' }) neck = it },
                 label = { Text("Pescoço") }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
             OutlinedTextField(
                 modifier = Modifier.weight(1f),
                 shape = RoundedCornerShape(16.dp),
-                value = waist, onValueChange = { waist = it },
+                value = waist, onValueChange = { if (it.all { char -> char.isDigit() || char == '.' || char == ',' }) waist = it },
                 label = { Text("Cintura") }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
             if (!isMale) {
                 OutlinedTextField(
                     modifier = Modifier.weight(1f),
                     shape = RoundedCornerShape(16.dp),
-                    value = hip, onValueChange = { hip = it },
+                    value = hip, onValueChange = { if (it.all { char -> char.isDigit() || char == '.' || char == ',' }) hip = it },
                     label = { Text("Quadril") }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
             }
@@ -156,8 +161,8 @@ fun IMCCalculatorContainer(
             onClick = {
                 if (validateFields()) {
                     Calculations.calculateIMC(
-                        height, weight, age, isMale, selectedOption.second,
-                        neck, waist, hip,
+                        height, weight.replace(",", "."), age, isMale, selectedOption.second,
+                        neck.replace(",", "."), waist.replace(",", "."), hip.replace(",", "."),
                         response = { res, w, h, tmb, tdee, fat ->
                             onResult(res, w, h, tmb, tdee, fat)
                         }

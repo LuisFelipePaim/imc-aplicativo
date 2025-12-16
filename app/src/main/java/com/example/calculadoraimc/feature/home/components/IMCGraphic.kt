@@ -6,16 +6,15 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.calculadoraimc.feature.home.model.IMCGraphicStatus
@@ -44,49 +43,46 @@ fun IMCGraphic(imcValue: Double) {
         )
     }
 
-    BoxWithConstraints(contentAlignment = Alignment.Center) {
-        val size = maxWidth.coerceAtMost(maxHeight) * 0.7f
-
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .height(200.dp)
+            .width(60.dp)
+    ) {
         IMCGraphicDrawer(
             imcPercent = animationProgress.value,
-            modifier = Modifier.size(size),
+            modifier = Modifier.fillMaxSize(),
             status = statusIMCGraphic
         )
-
-        Column {
-            // CORREÇÃO: Usando imageVector em vez de painter
-            Icon(
-                modifier = Modifier.size(52.dp),
-                imageVector = statusIMCGraphic.icon,
-                contentDescription = "Icone do gráfico",
-                tint = statusIMCGraphic.color
-            )
-        }
     }
 }
 
 @Composable
 fun IMCGraphicDrawer(imcPercent: Float, modifier: Modifier = Modifier, status: IMCGraphicStatus) {
     Canvas(modifier = modifier) {
-        val canvasSize = size.minDimension
-        val strokeWidth = 30f
+        val barWidth = size.width
+        val barHeight = size.height
+        val cornerRadius = CornerRadius(20f, 20f) // Arredondamento das bordas
 
-        drawArc(
-            color = Color.White.copy(alpha = 0.4f),
-            startAngle = 140f,
-            sweepAngle = 260f,
-            useCenter = false,
-            size = Size(canvasSize, canvasSize),
-            style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
+        // 1. Desenha o Fundo (Trilho vazio)
+        drawRoundRect(
+            color = Color.White.copy(alpha = 0.3f),
+            size = size,
+            cornerRadius = cornerRadius
         )
 
-        drawArc(
+        // 2. Calcula a altura do preenchimento baseado na porcentagem
+        val fillHeight = barHeight * imcPercent
+
+        // O Canvas desenha de cima para baixo (0,0 é topo-esquerda).
+        // Para a barra "subir", o topo do retângulo deve ser: AlturaTotal - AlturaPreenchimento
+        val topOffset = barHeight - fillHeight
+
+        drawRoundRect(
             color = status.color,
-            startAngle = 140f,
-            sweepAngle = 260f * imcPercent,
-            useCenter = false,
-            size = Size(canvasSize, canvasSize),
-            style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
+            topLeft = Offset(0f, topOffset),
+            size = Size(barWidth, fillHeight),
+            cornerRadius = cornerRadius
         )
     }
 }
@@ -95,7 +91,12 @@ fun IMCGraphicDrawer(imcPercent: Float, modifier: Modifier = Modifier, status: I
 @Composable
 private fun IMCGraphicPreview() {
     CalculadoraIMCTheme {
-        Column(modifier = Modifier.padding(20.dp).background(HealthPrimary)) {
+        Column(
+            modifier = Modifier
+                .padding(20.dp)
+                .background(HealthPrimary)
+                .padding(20.dp)
+        ) {
             IMCGraphic(imcValue = 22.0)
         }
     }

@@ -38,6 +38,13 @@ fun CalculadoraIMCTheme(
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
+    /** Gemini - início
+     * Prompt: Haja como um especialista em Kotlin. Em uma aplicação que utiliza
+     * a arquitetura MVVC de um aplicativo de medição de IMC, como você implemen-
+     * taria o desing dessa aplicação de forma que ficasse intuitiva e agradável
+     * para o usuário
+     *
+     */
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
@@ -46,7 +53,7 @@ fun CalculadoraIMCTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
-
+    /** Gemini - final */
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {

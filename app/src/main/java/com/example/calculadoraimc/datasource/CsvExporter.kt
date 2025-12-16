@@ -15,6 +15,13 @@ object CsvExporter {
         val fileName = "historico_imc.csv"
         val file = File(context.cacheDir, fileName)
 
+        /** Gemini - início
+         * Prompt: Haja como um especialista em Kotlin. Em uma aplicação que utiliza
+         * a arquitetura MVVC de um aplicativo de medição de IMC, como você faria a
+         * implementação de uma função que exporta um csv contendo os dados do histó-
+         * rico do indivíduo.
+         *
+         */
         try {
             val writer = FileWriter(file)
             writer.append("Data,Peso,Altura,IMC,Classificacao,TMB,TDEE\n")
@@ -49,5 +56,6 @@ object CsvExporter {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+        /** Gemini - final */
     }
 }
